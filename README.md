@@ -4,8 +4,8 @@ _Right now it will simply show the quantities where the master list has less tha
 
 
 - The default filenames that program accepts are:  
-   - "Inventory.csv" for the _supply list_  
-   - "InvMaster.csv" for the _master list_   
+   - "SupplyInventory.csv" for the _supply list_  
+   - "MasterInventory.csv" for the _master list_   
 - _You can set your own filenames but you must specify their name and location in command line arguments_
    - _See how to use command line arguments below_
 
