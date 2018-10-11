@@ -66,7 +66,7 @@ def update_master_qty():
     for part_id in master_dict:
         master_qty = master_dict[part_id]['TotalQty']
         supply_qty = _supply_dict[part_id]['TotalQty']
-        if master_qty != supply_qty:
+        if master_qty < supply_qty:
             print("master:", 
                 master_qty, 
                 "supply:", 
