@@ -1,4 +1,4 @@
-###In it's current state, this program will compare the quantity column for each part in one csv file with another.  
+### In it's current state, this program will compare the quantity column for each part in one csv file with another.  
 
 _Right now it will simply show the quantities where the master list has less than supply list._  
 
