@@ -6,8 +6,8 @@ if len(sys.argv) > 2:
     filename_master = sys.argv[1]
     filename_supply = sys.argv[2]
 else:
-    filename_master = 'InvMaster.csv'
-    filename_supply = 'Inventory.csv'
+    filename_master = 'MasterInventory.csv'
+    filename_supply = 'SupplyInventory.csv'
 
 print("Master filename:", filename_master)
 print("Supply filename:", filename_supply)
