@@ -1,4 +1,4 @@
-from csv import DictReader
+from csv import DictReader, DictWriter
 import sys
 
 
@@ -12,10 +12,23 @@ else:
 print("Master filename:", filename_master)
 print("Supply filename:", filename_supply)
 
+
+def create_filter(keep_set):
+    """Returns a function filter_row that has access to outer parameter of keep_set.
+    The returned function will return True if a row is not in the keep_set.
+    """
+    
+    def filter_row(row):
+        """Returns true if row's """
+        return True if row.get('VenCode') not in keep_set else False
+    return filter_row
+
+
 def get_value_set(dictionary, key):
     """Accepts a list of dictionaries and a key string.
     Returns a set off all the values at keys with the value of key string. 
     """
+
     value_set = set()
     for id in dictionary:
         value_set.add(dictionary.get(id).get('VenCode'))
@@ -26,6 +39,7 @@ def build_dict_from_csv(filename, filter_row=None):
     """Builds dictionary from csv file.
     CSV file must include columns: VenCode,PartNumber,TotalQty
     """
+    
     if not filename.endswith('.csv'):
         print("This is not a proper csv file.")
         return False
@@ -45,14 +59,6 @@ def build_dict_from_csv(filename, filter_row=None):
     return dictionary
 
 
-def create_filter(keep_set):
-    """Returns a function that has access to outer parameter of keep_set.
-    The returned function will return True if a row is not in the keep_set.
-    """
-    def filter_row(row):
-        return True if row.get('VenCode') not in keep_set else False
-    return filter_row
-
 
 def update_master_qty():
     master_dict = build_dict_from_csv(filename_master)
@@ -62,15 +68,39 @@ def update_master_qty():
     filter_cb = create_filter(ven_codes)
 
     _supply_dict = build_dict_from_csv(filename_supply, filter_cb)
-    
-    for part_id in master_dict:
-        master_qty = master_dict[part_id]['TotalQty']
-        supply_qty = _supply_dict[part_id]['TotalQty']
-        if master_qty < supply_qty:
-            print("master:", 
-                master_qty, 
-                "supply:", 
-                supply_qty
-            )
 
-update_master_qty()
+
+    fieldnames = ['VenCode', 'PartNumber', 'LongDescription', 'TotalQty', 'SKU']
+
+    with open('NewMasterInventory.csv', 'w', newline='') as out_file:
+        # reader = DictReader(in_file)
+
+        writer = DictWriter(out_file, fieldnames=fieldnames)
+        # import pdb; pdb.set_trace()
+        for part_id in master_dict:
+
+            # make a collection of master row-col locations with the new supply values
+            # update_list = [{'loc': [3,4], 'value':223}, ...]
+            
+            master_qty = int(master_dict[part_id]['TotalQty'])
+            supply_qty = int(_supply_dict[part_id]['TotalQty'])
+
+            if master_qty < supply_qty:
+
+                new_row = master_dict[part_id]
+                writer.writerow(new_row)
+                print("master:", master_qty, "supply:", supply_qty)
+            else:
+                writer.writerow(master_dict[part_id])
+            
+            # import pdb; pdb.set_trace()
+
+
+
+# def make_new_master(in_file):
+
+
+
+
+
+# update_master_qty()
