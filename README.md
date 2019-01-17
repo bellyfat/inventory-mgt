@@ -1,6 +1,4 @@
-### In it's current state, this program will compare the quantity column for each part in one csv file with another.  
-
-_Right now it will simply show the quantities where the master list has less than supply list._  
+### This program will update the quantity in master inventory with the quantity found in supply inventory based for each part in master inventory
 
 
 - The default filenames that program accepts are:  
@@ -10,7 +8,7 @@ _Right now it will simply show the quantities where the master list has less tha
    - _See how to use command line arguments below_
 
 
-- Both csv files must have the following columns:  
+- Both csv files must include the following columns:  
 
    | VenCode | PartNumber | TotalQty |  
    | ------- |:----------:|:--------:|  
