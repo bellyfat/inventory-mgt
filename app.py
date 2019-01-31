@@ -21,6 +21,8 @@ print("Supply filename:", filename_supply)
 
 
 def create_master_cache():
+    """Returns the master inventory as a dictionary."""
+
     index = {}
     with open(filename_master) as csv_file:
         master = DictReader(csv_file)
@@ -35,44 +37,57 @@ def create_master_cache():
                 index[code] = {num: qty if qty else 0}
     return index
 
-def create_row(code, num, qty):
-    return {
-        VEN_CODE: code, 
-        PART_NUMBER: num,
-        SKU: f'{code}_{num}',
-        QUANTITY: qty,
-    }
-    
+def search_cache(cache, keys, level=0):
+    """Search a an inventory cache."""
 
-def write_to_master(cache):
-    fieldnames = FIELDNAMES
-    with open("newmaster.csv", 'w', newline='') as out_file:
-        writer = DictWriter(out_file, fieldnames=fieldnames)
-        print(dict((field, field) for field in fieldnames))
-        writer.writerow(dict((field, field) for field in fieldnames))
-        for code in cache:
-            for num in cache[code]:
-                qty = cache[code][num]
-                row = create_row(code, num, qty)
-                writer.writerow(row)
-
-def search_cache(idx, keys, level=0):
     if level >= len(keys):
         return False
+
     key = keys[level]
-    val = idx.get(key)
+    val = cache.get(key)
+
     if level == len(keys)-1:
         return val if val != '' else 0  
     if not val:
         return False   
     return search_cache(val, keys, level+1)
 
+def create_row(code, num, qty):
+    """Helper function to create a row dictionary."""
+
+    return {
+        VEN_CODE: code, 
+        PART_NUMBER: num,
+        SKU: f'{code}_{num}',
+        QUANTITY: qty,
+    }
+
+def create_header(fieldnames):
+    return dict((field, field) for field in fieldnames)
+
+def write_to_master(cache):
+    """Write row to 'newmaster.csv'"""
+
+    with open("newmaster.csv", 'w', newline='') as out_file:
+        writer = DictWriter(out_file, fieldnames=fieldnames)
+
+        # write header 
+        header = create_header(FIELDNAMES)
+        writer.writerow(header)
+
+        # write rows
+        for code in cache:
+            for num in cache[code]:
+                qty = cache[code][num]
+                row = create_row(code, num, qty)
+                writer.writerow(row)
+
 
 def update_master():
     """Create a new csv file called 'newmaster.csv' that will contain 
     the rows from the master inventory file with quantities updated from 
     the supply inventory."""
-    
+
     try:
         # cache data in memory from the master inventory file
         master_cache = create_master_cache()
