@@ -35,21 +35,25 @@ def create_master_cache():
                 index[code] = {num: qty if qty else 0}
     return index
 
+def create_row(code, num, qty):
+    return {
+        VEN_CODE: code, 
+        PART_NUMBER: num,
+        SKU: f'{code}_{num}',
+        QUANTITY: qty,
+    }
+    
+
 def write_to_master(cache):
     fieldnames = FIELDNAMES
     with open("newmaster.csv", 'w', newline='') as out_file:
         writer = DictWriter(out_file, fieldnames=fieldnames)
+        print(dict((field, field) for field in fieldnames))
         writer.writerow(dict((field, field) for field in fieldnames))
         for code in cache:
             for num in cache[code]:
-                print(code, num)
-                row = {
-                    VEN_CODE: code, 
-                    PART_NUMBER: num,
-                    SKU: f'{code}_{num}',
-                    QUANTITY: cache[code][num],
-                }
-                print('row', row)
+                qty = cache[code][num]
+                row = create_row(code, num, qty)
                 writer.writerow(row)
 
 def search_cache(idx, keys, level=0):
@@ -67,7 +71,6 @@ def search_cache(idx, keys, level=0):
 def update_master():
     try:
         master_cache = create_master_cache()
-        print('master_cache', master_cache)
         x = 0
         with open(filename_supply) as csv_file:
             supply = DictReader(csv_file)
