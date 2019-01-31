@@ -69,16 +69,26 @@ def search_cache(idx, keys, level=0):
 
 
 def update_master():
+    """Create a new csv file called 'newmaster.csv' that will contain 
+    the rows from the master inventory file with quantities updated from 
+    the supply inventory."""
+    
     try:
+        # cache data in memory from the master inventory file
         master_cache = create_master_cache()
-        x = 0
+
         with open(filename_supply) as csv_file:
             supply = DictReader(csv_file)
+
+            # loop through each row in the supply inventory,
+            # and update the qty in the master cache
             for part in supply:
                 supply_code = part[VEN_CODE]
                 supply_num = part[PART_NUMBER]
                 supply_qty = part[QUANTITY]
                 
+                # search the master inventory cache
+                # for the supply 
                 master_qty = search_cache(
                     master_cache,
                     [supply_code, supply_num]
@@ -86,9 +96,12 @@ def update_master():
 
                 if master_qty:
                     master_cache[supply_code][supply_num] = supply_qty
+
+        # write the cache to the master csv file
         write_to_master(master_cache)
+
     except KeyError as e:
-        print('Error', e)
+        print('There was an error', e)
 
 if __name__ == "__main__":
     update_master()
