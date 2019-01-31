@@ -69,7 +69,7 @@ def write_to_master(cache):
     """Write row to 'newmaster.csv'"""
 
     with open("newmaster.csv", 'w', newline='') as out_file:
-        writer = DictWriter(out_file, fieldnames=fieldnames)
+        writer = DictWriter(out_file, fieldnames=FIELDNAMES)
 
         # write header 
         header = create_header(FIELDNAMES)
