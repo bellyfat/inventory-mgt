@@ -24,7 +24,7 @@ def create_master_cache():
     """Returns the master inventory as a dictionary."""
 
     index = {}
-    with open(filename_master) as csv_file:
+    with open(filename_master, encoding="utf8") as csv_file:
         master = DictReader(csv_file)
         for part in master:
             code = part[VEN_CODE]
@@ -68,7 +68,7 @@ def create_header(fieldnames):
 def write_to_master(cache):
     """Write row to 'newmaster.csv'"""
 
-    with open("newmaster.csv", 'w', newline='') as out_file:
+    with open("newmaster.csv", 'w', newline='', encoding="utf8") as out_file:
         writer = DictWriter(out_file, fieldnames=FIELDNAMES)
 
         # write header 
@@ -92,7 +92,7 @@ def update_master():
         # cache data in memory from the master inventory file
         master_cache = create_master_cache()
 
-        with open(filename_supply) as csv_file:
+        with open(filename_supply, encoding="utf8") as csv_file:
             supply = DictReader(csv_file)
 
             # loop through each row in the supply inventory,
