@@ -23,7 +23,7 @@ print("Supply filename:", filename_supply)
 def create_master_cache():
     """Returns the master inventory as a dictionary."""
 
-    index = {}
+    cache = {}
     with open(filename_master, encoding="utf8") as csv_file:
         master = DictReader(csv_file)
         for part in master:
@@ -31,11 +31,12 @@ def create_master_cache():
             num = part[PART_NUMBER]
             qty = part[QUANTITY]
 
-            if index.get(code):
-                index[code][num] = qty if qty else 0
+            if cache.get(code):
+                cache[code][num] = qty if qty else 0
             else:
-                index[code] = {num: qty if qty else 0}
-    return index
+                cache[code] = {num: qty if qty else 0}
+    print(cache)
+    return cache
 
 def search_cache(cache, keys, level=0):
     """Search a an inventory cache."""
